@@ -10,6 +10,7 @@ import org.mtransit.parser.Utils;
 import org.mtransit.parser.gtfs.data.GCalendar;
 import org.mtransit.parser.gtfs.data.GCalendarDate;
 import org.mtransit.parser.gtfs.data.GRoute;
+import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GTrip;
 import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
@@ -147,25 +148,25 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	private static final String MARINE_INSTITUTE = "Marine Institute";
-	private static final String VIRGINIA_PARK = "Virginia Park";
+	private static final String VIRGINIA_PARK = "Virginia Pk";
 	private static final String DOWNTOWN = "Downtown";
 	private static final String KELSEY_DR = "Kelsey Dr";
-	private static final String SHEA_HEIGHTS = "Shea Heights";
+	private static final String SHEA_HEIGHTS = "Shea Hts";
 	private static final String INSTITUTE_EXPRESS = "Institute Express";
-	private static final String CUCKHOLDS_COVE = "Cuckholds Cove";
-	private static final String KENMOUNT_TERRACE = "Kenmount Terrace";
+	private static final String CUCKHOLDS_COVE = "Cuckholds Cv";
+	private static final String KENMOUNT_TERRACE = "Kenmount Ter";
 	private static final String TORBAY_ROAD = "Torbay Rd";
 	private static final String MUN_CENTER = "MUN Ctr";
-	private static final String AIRPORT_HEIGHTS = "Airport Heights";
+	private static final String AIRPORT_HEIGHTS = "Airport Hts";
 	private static final String MOUNT_PEARL = "Mt Pearl";
 	private static final String STAVANGER_DRIVE = "Stavanger Dr";
 	private static final String AVALON_MALL = "Avalon Mall";
 	private static final String GOULDS = "Goulds";
-	private static final String THE_VILLAGE = "The Village";
+	private static final String THE_VILLAGE = "The Vlg";
 	private static final String MUN_EXPRESS = "MUN Express";
 
 	@Override
-	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip) {
+	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
 		if (mRoute.id == 1l) {
 			if (gTrip.direction_id == 0) {
 				mTrip.setHeadsignString(MARINE_INSTITUTE, gTrip.direction_id);
@@ -348,6 +349,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String cleanTripHeadsign(String tripHeadsign) {
+		tripHeadsign = MSpec.cleanStreetTypes(tripHeadsign);
 		return MSpec.cleanLabel(tripHeadsign);
 	}
 
