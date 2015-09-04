@@ -380,7 +380,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String cleanStopName(String gStopName) {
-		if (Utils.isUppercaseOnly(gStopName, true)) {
+		if (Utils.isUppercaseOnly(gStopName, true, true)) {
 			gStopName = gStopName.toLowerCase(Locale.ENGLISH);
 		}
 		gStopName = CIVIC_ADDRESS.matcher(gStopName).replaceAll(CIVIC_ADDRESS_REPLACEMENT);
