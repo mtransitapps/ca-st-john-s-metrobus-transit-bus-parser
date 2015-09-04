@@ -77,6 +77,13 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 	}
 
 	@Override
+	public String getRouteLongName(GRoute gRoute) {
+		String routeLongName = gRoute.getRouteLongName();
+		routeLongName = CleanUtils.cleanSlashes(routeLongName);
+		return CleanUtils.cleanLabel(routeLongName);
+	}
+
+	@Override
 	public String getRouteShortName(GRoute gRoute) {
 		return gRoute.getRouteShortName().trim();
 	}
@@ -371,15 +378,6 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final Pattern APARTMENT = Pattern.compile("(apartment)", Pattern.CASE_INSENSITIVE);
 	private static final String APARTMENT_REPLACEMENT = "Apt";
 
-	private static final Pattern BUILDING = Pattern.compile("(building)", Pattern.CASE_INSENSITIVE);
-	private static final String BUILDING_REPLACEMENT = "Bldg";
-
-	private static final Pattern CENTER = Pattern.compile("(cent(er|re))", Pattern.CASE_INSENSITIVE);
-	private static final String CENTER_REPLACEMENT = "Ctr";
-
-	private static final Pattern PLAZA = Pattern.compile("(plaza)", Pattern.CASE_INSENSITIVE);
-	private static final String PLAZA_REPLACEMENT = "Plz";
-
 	@Override
 	public String cleanStopName(String gStopName) {
 		if (Utils.isUppercaseOnly(gStopName, true)) {
@@ -391,9 +389,6 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		gStopName = DASH.matcher(gStopName).replaceAll(DASH_REPLACEMENT);
 		gStopName = AND.matcher(gStopName).replaceAll(AND_REPLACEMENT);
 		gStopName = APARTMENT.matcher(gStopName).replaceAll(APARTMENT_REPLACEMENT);
-		gStopName = BUILDING.matcher(gStopName).replaceAll(BUILDING_REPLACEMENT);
-		gStopName = CENTER.matcher(gStopName).replaceAll(CENTER_REPLACEMENT);
-		gStopName = PLAZA.matcher(gStopName).replaceAll(PLAZA_REPLACEMENT);
 		gStopName = CleanUtils.cleanStreetTypes(gStopName);
 		gStopName = CleanUtils.cleanNumbers(gStopName);
 		return CleanUtils.cleanLabel(gStopName);
