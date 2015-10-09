@@ -174,7 +174,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
-		if (mRoute.id == 1l) {
+		if (mRoute.getId() == 1l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(MARINE_INSTITUTE, gTrip.getDirectionId());
 				return;
@@ -182,7 +182,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 2l) {
+		} else if (mRoute.getId() == 2l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
@@ -190,7 +190,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 3l) {
+		} else if (mRoute.getId() == 3l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
 				return;
@@ -198,7 +198,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 5l) {
+		} else if (mRoute.getId() == 5l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
 				return;
@@ -206,7 +206,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 6l) {
+		} else if (mRoute.getId() == 6l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
 				return;
@@ -214,7 +214,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 9l) {
+		} else if (mRoute.getId() == 9l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
 				return;
@@ -222,7 +222,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 10l) {
+		} else if (mRoute.getId() == 10l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
 				return;
@@ -230,7 +230,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(KELSEY_DR, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 11l) {
+		} else if (mRoute.getId() == 11l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(SHEA_HEIGHTS, gTrip.getDirectionId());
 				return;
@@ -238,7 +238,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 12l) {
+		} else if (mRoute.getId() == 12l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
@@ -246,12 +246,12 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 13l) {
+		} else if (mRoute.getId() == 13l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(INSTITUTE_EXPRESS, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 14l) {
+		} else if (mRoute.getId() == 14l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
 				return;
@@ -259,7 +259,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 15l) {
+		} else if (mRoute.getId() == 15l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(CUCKHOLDS_COVE, gTrip.getDirectionId());
 				return;
@@ -267,7 +267,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 16l) {
+		} else if (mRoute.getId() == 16l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(KENMOUNT_TERRACE, gTrip.getDirectionId());
 				return;
@@ -275,7 +275,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 17l) {
+		} else if (mRoute.getId() == 17l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
 				return;
@@ -283,7 +283,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 18l) {
+		} else if (mRoute.getId() == 18l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
 				return;
@@ -291,7 +291,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 19l) {
+		} else if (mRoute.getId() == 19l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
@@ -299,7 +299,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 20l) {
+		} else if (mRoute.getId() == 20l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
 				return;
@@ -307,7 +307,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 21l) {
+		} else if (mRoute.getId() == 21l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
 				return;
@@ -315,7 +315,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 22l) {
+		} else if (mRoute.getId() == 22l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
 				return;
@@ -323,7 +323,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 23l) {
+		} else if (mRoute.getId() == 23l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
 				return;
@@ -331,12 +331,12 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 24l) {
+		} else if (mRoute.getId() == 24l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 25l) {
+		} else if (mRoute.getId() == 25l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
 				return;
@@ -344,7 +344,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
 				return;
 			}
-		} else if (mRoute.id == 26l) {
+		} else if (mRoute.getId() == 26l) {
 			if (gTrip.getDirectionId() == 0) {
 				mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
 				return;
