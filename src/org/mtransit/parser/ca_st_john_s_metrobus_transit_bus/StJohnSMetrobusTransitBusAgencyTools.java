@@ -2,19 +2,21 @@ package org.mtransit.parser.ca_st_john_s_metrobus_transit_bus;
 
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.DefaultAgencyTools;
 import org.mtransit.parser.Utils;
 import org.mtransit.parser.gtfs.data.GCalendar;
 import org.mtransit.parser.gtfs.data.GCalendarDate;
 import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GSpec;
+import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.gtfs.data.GTrip;
 import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
-import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.mt.data.MTrip;
 
 // http://www.metrobus.com/insidepages.asp
@@ -392,5 +394,20 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		gStopName = CleanUtils.cleanStreetTypes(gStopName);
 		gStopName = CleanUtils.cleanNumbers(gStopName);
 		return CleanUtils.cleanLabel(gStopName);
+	}
+	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
+
+	@Override
+	public int getStopId(GStop gStop) {
+		if (Utils.isDigitsOnly(gStop.getStopId())) {
+			return Integer.parseInt(gStop.getStopId());
+		}
+		Matcher matcher = DIGITS.matcher(gStop.getStopId());
+		if (matcher.find()) {
+			return Integer.parseInt(matcher.group());
+		}
+		System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
+		System.exit(-1);
+		return -1;
 	}
 }
