@@ -148,9 +148,10 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		case 24: return COLOR_363435;
 		case 25: return COLOR_3E4095;
 		case 26: return COLOR_363435;
+		case 30: return COLOR_363435; // really?
 		// @formatter:on
 		default:
-			System.out.println("Unexpected route color " + gRoute);
+			System.out.printf("\nUnexpected route color %s!\n", gRoute);
 			System.exit(-1);
 			return null;
 		}
@@ -351,8 +352,16 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
 				return;
 			}
+		} else if (mRoute.getId() == 30l) {
+			if (gTrip.getDirectionId() == 0) {
+				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+				return;
+			} else if (gTrip.getDirectionId() == 1) {
+				mTrip.setHeadsignString("Paradise", gTrip.getDirectionId());
+				return;
+			}
 		}
-		System.out.println("Unexpected trip " + gTrip);
+		System.out.printf("\nUnexpected trip %s!\n", gTrip);
 		System.exit(-1);
 	}
 
