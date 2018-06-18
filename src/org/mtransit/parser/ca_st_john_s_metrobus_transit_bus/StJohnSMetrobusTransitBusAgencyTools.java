@@ -1,6 +1,10 @@
 package org.mtransit.parser.ca_st_john_s_metrobus_transit_bus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,18 +12,23 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.DefaultAgencyTools;
+import org.mtransit.parser.Pair;
+import org.mtransit.parser.SplitUtils;
 import org.mtransit.parser.Utils;
+import org.mtransit.parser.SplitUtils.RouteTripSpec;
 import org.mtransit.parser.gtfs.data.GCalendar;
 import org.mtransit.parser.gtfs.data.GCalendarDate;
 import org.mtransit.parser.gtfs.data.GRoute;
 import org.mtransit.parser.gtfs.data.GSpec;
 import org.mtransit.parser.gtfs.data.GStop;
 import org.mtransit.parser.gtfs.data.GTrip;
+import org.mtransit.parser.gtfs.data.GTripStop;
 import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
+import org.mtransit.parser.mt.data.MTripStop;
 
-// http://www.metrobus.com/insidepages.asp
+// http://www.metrobus.com/html-default/gtfs.asp
 // http://www.metrobustransit.ca/google/google_transit.zip
 public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
@@ -58,6 +67,11 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 			return excludeUselessCalendarDate(gCalendarDates, this.serviceIds);
 		}
 		return super.excludeCalendarDate(gCalendarDates);
+	}
+
+	@Override
+	public boolean excludeRoute(GRoute gRoute) {
+		return super.excludeRoute(gRoute);
 	}
 
 	@Override
@@ -119,6 +133,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String COLOR_A6787A = "A6787A";
 	private static final String COLOR_3E4095 = "3E4095";
 	private static final String COLOR_363435 = "363435";
+	private static final String COLOR_EECE20 = "EECE20";
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
@@ -148,7 +163,8 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		case 24: return COLOR_363435;
 		case 25: return COLOR_3E4095;
 		case 26: return COLOR_363435;
-		case 30: return COLOR_363435; // really?
+		case 27: return null; // TODO
+		case 30: return COLOR_EECE20;
 		// @formatter:on
 		default:
 			System.out.printf("\nUnexpected route color %s!\n", gRoute);
@@ -175,190 +191,242 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 	private static final String THE_VILLAGE = "The Vlg";
 	private static final String MUN_EXPRESS = "MUN Express";
 
+	private static HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
+	static {
+		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
+		map2.put(27L, new RouteTripSpec(27L, //
+				0, MTrip.HEADSIGN_TYPE_STRING, "Delta", // To Sheraton / Quidi Vidi / Delta // Quidi Vidi / Delta
+				1, MTrip.HEADSIGN_TYPE_STRING, "Cabot Tower") // To Railway / Cabot Tower
+				.addTripSort(0, //
+						Arrays.asList(new String[] { //
+						"6027", // Cabot Tower (Signal Hill)
+								"1985", // Cavendish Sq - Sheraton Hotel
+								"3525", // ++
+								"6029", // Delta Hotel (New Gower St)
+						})) //
+				.addTripSort(1, //
+						Arrays.asList(new String[] { //
+						"6029", // Delta Hotel (New Gower St)
+								"1960", // ++
+								"6027", // Cabot Tower (Signal Hill)
+						})) //
+				.compileBothTripSort());
+		ALL_ROUTE_TRIPS2 = map2;
+	}
+
+	@Override
+	public int compareEarly(long routeId, List<MTripStop> list1, List<MTripStop> list2, MTripStop ts1, MTripStop ts2, GStop ts1GStop, GStop ts2GStop) {
+		if (ALL_ROUTE_TRIPS2.containsKey(routeId)) {
+			return ALL_ROUTE_TRIPS2.get(routeId).compare(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop, this);
+		}
+		return super.compareEarly(routeId, list1, list2, ts1, ts2, ts1GStop, ts2GStop);
+	}
+
+	@Override
+	public ArrayList<MTrip> splitTrip(MRoute mRoute, GTrip gTrip, GSpec gtfs) {
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
+			return ALL_ROUTE_TRIPS2.get(mRoute.getId()).getAllTrips();
+		}
+		return super.splitTrip(mRoute, gTrip, gtfs);
+	}
+
+	@Override
+	public Pair<Long[], Integer[]> splitTripStop(MRoute mRoute, GTrip gTrip, GTripStop gTripStop, ArrayList<MTrip> splitTrips, GSpec routeGTFS) {
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
+			return SplitUtils.splitTripStop(mRoute, gTrip, gTripStop, routeGTFS, ALL_ROUTE_TRIPS2.get(mRoute.getId()), this);
+		}
+		return super.splitTripStop(mRoute, gTrip, gTripStop, splitTrips, routeGTFS);
+	}
+
 	@Override
 	public void setTripHeadsign(MRoute mRoute, MTrip mTrip, GTrip gTrip, GSpec gtfs) {
-		if (mRoute.getId() == 1l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(MARINE_INSTITUTE, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 2l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 3l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 5l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 6l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 9l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 10l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(KELSEY_DR, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 11l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(SHEA_HEIGHTS, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 12l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 13l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(INSTITUTE_EXPRESS, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 14l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 15l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(CUCKHOLDS_COVE, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 16l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(KENMOUNT_TERRACE, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 17l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 18l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 19l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 20l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 21l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 22l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 23l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 24l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 25l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 26l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
-				return;
-			}
-		} else if (mRoute.getId() == 30l) {
-			if (gTrip.getDirectionId() == 0) {
-				mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-				return;
-			} else if (gTrip.getDirectionId() == 1) {
-				mTrip.setHeadsignString("Paradise", gTrip.getDirectionId());
-				return;
+		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
+			return; // split
+		}
+		if (isGoodEnoughAccepted()) {
+			if (mRoute.getId() == 1l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(MARINE_INSTITUTE, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 2l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 3l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 5l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 6l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 9l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 10l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(KELSEY_DR, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 11l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(SHEA_HEIGHTS, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 12l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 13l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(INSTITUTE_EXPRESS, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 14l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 15l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(CUCKHOLDS_COVE, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 16l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(KENMOUNT_TERRACE, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 17l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 18l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 19l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 20l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 21l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 22l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 23l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 24l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 25l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 26l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
+					return;
+				}
+			} else if (mRoute.getId() == 30l) {
+				if (gTrip.getDirectionId() == 0) {
+					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
+					return;
+				} else if (gTrip.getDirectionId() == 1) {
+					mTrip.setHeadsignString("Paradise", gTrip.getDirectionId());
+					return;
+				}
 			}
 		}
 		System.out.printf("\nUnexpected trip %s!\n", gTrip);
@@ -404,6 +472,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		gStopName = CleanUtils.cleanNumbers(gStopName);
 		return CleanUtils.cleanLabel(gStopName);
 	}
+
 	private static final Pattern DIGITS = Pattern.compile("[\\d]+");
 
 	@Override
