@@ -173,44 +173,9 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		}
 	}
 
-	private static final String MARINE_INSTITUTE = "Marine Institute";
-	private static final String VIRGINIA_PARK = "Virginia Pk";
-	private static final String DOWNTOWN = "Downtown";
-	private static final String KELSEY_DR = "Kelsey Dr";
-	private static final String SHEA_HEIGHTS = "Shea Hts";
-	private static final String INSTITUTE_EXPRESS = "Institute Express";
-	private static final String CUCKHOLDS_COVE = "Cuckholds Cv";
-	private static final String KENMOUNT_TERRACE = "Kenmount Ter";
-	private static final String TORBAY_ROAD = "Torbay Rd";
-	private static final String MUN_CENTER = "MUN Ctr";
-	private static final String AIRPORT_HEIGHTS = "Airport Hts";
-	private static final String MOUNT_PEARL = "Mt Pearl";
-	private static final String STAVANGER_DRIVE = "Stavanger Dr";
-	private static final String AVALON_MALL = "Avalon Mall";
-	private static final String GOULDS = "Goulds";
-	private static final String THE_VILLAGE = "The Vlg";
-	private static final String MUN_EXPRESS = "MUN Express";
-
 	private static HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
 	static {
 		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
-		map2.put(27L, new RouteTripSpec(27L, //
-				0, MTrip.HEADSIGN_TYPE_STRING, "Delta", // To Sheraton / Quidi Vidi / Delta // Quidi Vidi / Delta
-				1, MTrip.HEADSIGN_TYPE_STRING, "Cabot Tower") // To Railway / Cabot Tower
-				.addTripSort(0, //
-						Arrays.asList(new String[] { //
-						"6027", // Cabot Tower (Signal Hill)
-								"1985", // Cavendish Sq - Sheraton Hotel
-								"3525", // ++
-								"6029", // Delta Hotel (New Gower St)
-						})) //
-				.addTripSort(1, //
-						Arrays.asList(new String[] { //
-						"6029", // Delta Hotel (New Gower St)
-								"1960", // ++
-								"6027", // Cabot Tower (Signal Hill)
-						})) //
-				.compileBothTripSort());
 		ALL_ROUTE_TRIPS2 = map2;
 	}
 
@@ -243,200 +208,45 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		if (ALL_ROUTE_TRIPS2.containsKey(mRoute.getId())) {
 			return; // split
 		}
-		if (isGoodEnoughAccepted()) {
-			if (mRoute.getId() == 1l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(MARINE_INSTITUTE, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 2l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 3l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 5l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(VIRGINIA_PARK, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 6l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 9l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 10l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(DOWNTOWN, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(KELSEY_DR, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 11l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(SHEA_HEIGHTS, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 12l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 13l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(INSTITUTE_EXPRESS, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 14l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 15l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(CUCKHOLDS_COVE, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 16l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(KENMOUNT_TERRACE, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 17l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(TORBAY_ROAD, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(MUN_CENTER, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 18l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 19l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 20l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AIRPORT_HEIGHTS, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 21l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 22l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(MOUNT_PEARL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 23l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(STAVANGER_DRIVE, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 24l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 25l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(GOULDS, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString(THE_VILLAGE, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 26l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(MUN_EXPRESS, gTrip.getDirectionId());
-					return;
-				}
-			} else if (mRoute.getId() == 30l) {
-				if (gTrip.getDirectionId() == 0) {
-					mTrip.setHeadsignString(AVALON_MALL, gTrip.getDirectionId());
-					return;
-				} else if (gTrip.getDirectionId() == 1) {
-					mTrip.setHeadsignString("Paradise", gTrip.getDirectionId());
-					return;
-				}
-			}
-		}
-		System.out.printf("\nUnexpected trip %s!\n", gTrip);
-		System.exit(-1);
+		mTrip.setHeadsignString(cleanTripHeadsign(gTrip.getTripHeadsign()), gTrip.getDirectionId());
 	}
+
+	private static final Pattern STARTS_WITH_AREA = Pattern.compile("(^(([\\w]+[\\.]? )+(\\- ))*)", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern STARTS_WITH_TO = Pattern.compile("(^(to ))", Pattern.CASE_INSENSITIVE);
 
 	@Override
 	public String cleanTripHeadsign(String tripHeadsign) {
+		tripHeadsign = STARTS_WITH_AREA.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
+		tripHeadsign = STARTS_WITH_TO.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
+		tripHeadsign = CleanUtils.cleanSlashes(tripHeadsign);
 		tripHeadsign = CleanUtils.cleanStreetTypes(tripHeadsign);
 		return CleanUtils.cleanLabel(tripHeadsign);
+	}
+
+	@Override
+	public boolean mergeHeadsign(MTrip mTrip, MTrip mTripToMerge) {
+		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
+		if (mTrip.getRouteId() == 1L) {
+			if (Arrays.asList( //
+					"MUN / CONA / MI", //
+					"Institutes" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Institutes", mTrip.getHeadsignId());
+				return true;
+			}
+		} else if (mTrip.getRouteId() == 27L) {
+			if (Arrays.asList( //
+					"Sheraton / Quidi Vidi / Delta", //
+					"Quidi Vidi / Delta" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Quidi Vidi / Delta", mTrip.getHeadsignId()); // Sheraton / Quidi Vidi / Delta
+				return true;
+			}
+		}
+		System.out.printf("\nUnexpected trips to merge: %s & %s!\n", mTrip, mTripToMerge);
+		System.exit(-1);
+		return false;
 	}
 
 	private static final Pattern CIVIC_ADDRESS_ENDS_WITH = Pattern.compile("((\\s)*(\\- opposite|\\- opp|opposite|\\-)(\\s)*$)", Pattern.CASE_INSENSITIVE);
