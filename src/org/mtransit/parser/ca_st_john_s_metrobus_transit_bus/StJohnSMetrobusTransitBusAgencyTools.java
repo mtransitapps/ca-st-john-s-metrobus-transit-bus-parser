@@ -89,7 +89,22 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public long getRouteId(GRoute gRoute) {
-		return Long.parseLong(gRoute.getRouteShortName().trim()); // using route short name as route ID
+		String rsn = gRoute.getRouteShortName().trim();
+		if (!Utils.isDigitsOnly(rsn)) {
+			Matcher matcher = DIGITS.matcher(rsn);
+			if (matcher.find()) {
+				int digits = Integer.parseInt(matcher.group());
+				if (rsn.endsWith("A")) {
+					return digits + RID_ENDS_WITH_A;
+				} else if (rsn.endsWith("B")) {
+					return digits + RID_ENDS_WITH_B;
+				}
+			}
+			System.out.printf("\nUnexptected route ID for %s!\n", gRoute);
+			System.exit(-1);
+			return -1l;
+		}
+		return Long.parseLong(rsn); // using route short name as route ID
 	}
 
 	@Override
@@ -137,7 +152,18 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public String getRouteColor(GRoute gRoute) {
-		int rsn = Integer.parseInt(gRoute.getRouteShortName().trim());
+		String rsnS = gRoute.getRouteShortName().trim();
+		if (!Utils.isDigitsOnly(rsnS)) {
+			if ("3A".equalsIgnoreCase(rsnS)) {
+				return COLOR_8FC74A; // same as 3
+			} else if ("3B".equalsIgnoreCase(rsnS)) {
+				return COLOR_8FC74A; // same as 3
+			}
+			System.out.printf("\nUnexpected route color %s!\n", gRoute);
+			System.exit(-1);
+			return null;
+		}
+		int rsn = Integer.parseInt(rsnS);
 		switch (rsn) {
 		// @formatter:off
 		case 1: return COLOR_F6863C;
