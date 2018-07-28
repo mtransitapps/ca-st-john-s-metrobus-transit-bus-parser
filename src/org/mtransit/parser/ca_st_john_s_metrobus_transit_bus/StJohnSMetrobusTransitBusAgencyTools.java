@@ -92,6 +92,9 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		return MAgency.ROUTE_TYPE_BUS;
 	}
 
+	private static final long RID_ENDS_WITH_A = 10_000L;
+	private static final long RID_ENDS_WITH_B = 20_000L;
+
 	@Override
 	public long getRouteId(GRoute gRoute) {
 		String rsn = gRoute.getRouteShortName().trim();
