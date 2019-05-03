@@ -249,10 +249,13 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	private static final Pattern STARTS_WITH_TO = Pattern.compile("(^(to ))", Pattern.CASE_INSENSITIVE);
 
+	private static final Pattern STARTS_WITH_DASH = Pattern.compile("(^.*( )?(\\- ))", Pattern.CASE_INSENSITIVE);
+
 	@Override
 	public String cleanTripHeadsign(String tripHeadsign) {
 		tripHeadsign = STARTS_WITH_AREA.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
 		tripHeadsign = STARTS_WITH_TO.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
+		tripHeadsign = STARTS_WITH_DASH.matcher(tripHeadsign).replaceAll(StringUtils.EMPTY);
 		tripHeadsign = CleanUtils.cleanSlashes(tripHeadsign);
 		tripHeadsign = CleanUtils.cleanStreetTypes(tripHeadsign);
 		return CleanUtils.cleanLabel(tripHeadsign);
