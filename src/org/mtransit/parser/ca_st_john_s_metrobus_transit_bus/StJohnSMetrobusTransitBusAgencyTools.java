@@ -272,6 +272,14 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Institutes", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == 3L) {
+			if (Arrays.asList( //
+					"Highland Dr / Kingsbridge / Vlg", //
+					"Vlg Mall" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Vlg Mall", mTrip.getHeadsignId());
+				return true;
+			}
 		} else if (mTrip.getRouteId() == 27L) {
 			if (Arrays.asList( //
 					"Sheraton / Quidi Vidi / Delta", //
