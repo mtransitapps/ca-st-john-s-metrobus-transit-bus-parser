@@ -280,6 +280,14 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Vlg Mall", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == 11L) {
+			if (Arrays.asList( //
+					StringUtils.EMPTY, //
+					"Avalon Mall" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Avalon Mall", mTrip.getHeadsignId());
+				return true;
+			}
 		} else if (mTrip.getRouteId() == 27L) {
 			if (Arrays.asList( //
 					"Sheraton / Quidi Vidi / Delta", //
