@@ -28,8 +28,9 @@ import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
 import org.mtransit.parser.mt.data.MTripStop;
 
-// http://www.metrobus.com/html-default/gtfs.asp
-// http://www.metrobustransit.ca/google/google_transit.zip
+// https://www.metrobus.com/html-default/gtfs.asp
+// https://www.metrobus.com/html-default/documents.asp
+// https://www.metrobus.com/html-default/gtfs.asp
 public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
