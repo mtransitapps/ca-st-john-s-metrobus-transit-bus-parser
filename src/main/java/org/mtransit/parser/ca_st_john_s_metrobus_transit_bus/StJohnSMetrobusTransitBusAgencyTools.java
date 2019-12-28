@@ -30,7 +30,7 @@ import org.mtransit.parser.mt.data.MTripStop;
 
 // https://www.metrobus.com/html-default/gtfs.asp
 // https://www.metrobus.com/html-default/documents.asp
-// https://www.metrobus.com/html-default/gtfs.asp
+// https://www.metrobus.com/google/google_transit.zip
 public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(String[] args) {
