@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.mtransit.parser.CleanUtils;
 import org.mtransit.parser.DefaultAgencyTools;
+import org.mtransit.parser.MTLog;
 import org.mtransit.parser.Pair;
 import org.mtransit.parser.SplitUtils;
 import org.mtransit.parser.Utils;
@@ -47,11 +48,11 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public void start(String[] args) {
-		System.out.printf("\nGenerating Metrobus Transit bus data...");
+		MTLog.log("Generating Metrobus Transit bus data...");
 		long start = System.currentTimeMillis();
 		this.serviceIds = extractUsefulServiceIds(args, this);
 		super.start(args);
-		System.out.printf("\nGenerating Metrobus Transit bus data... DONE in %s.\n", Utils.getPrettyDuration(System.currentTimeMillis() - start));
+		MTLog.log("Generating Metrobus Transit bus data... DONE in %s.", Utils.getPrettyDuration(System.currentTimeMillis() - start));
 	}
 
 	@Override
@@ -73,11 +74,6 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 			return excludeUselessCalendarDate(gCalendarDates, this.serviceIds);
 		}
 		return super.excludeCalendarDate(gCalendarDates);
-	}
-
-	@Override
-	public boolean excludeRoute(GRoute gRoute) {
-		return super.excludeRoute(gRoute);
 	}
 
 	@Override
@@ -109,9 +105,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 					return digits + RID_ENDS_WITH_B;
 				}
 			}
-			System.out.printf("\nUnexptected route ID for %s!\n", gRoute);
-			System.exit(-1);
-			return -1l;
+			throw new MTLog.Fatal("Unexptected route ID for %s!", gRoute);
 		}
 		return Long.parseLong(rsn); // using route short name as route ID
 	}
@@ -168,9 +162,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 			} else if ("3B".equalsIgnoreCase(rsnS)) {
 				return COLOR_8FC74A; // same as 3
 			}
-			System.out.printf("\nUnexpected route color %s!\n", gRoute);
-			System.exit(-1);
-			return null;
+			throw new MTLog.Fatal("Unexpected route color %s!", gRoute);
 		}
 		int rsn = Integer.parseInt(rsnS);
 		switch (rsn) {
@@ -202,15 +194,13 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		case 30: return COLOR_EECE20;
 		// @formatter:on
 		default:
-			System.out.printf("\nUnexpected route color %s!\n", gRoute);
-			System.exit(-1);
-			return null;
+			throw new MTLog.Fatal("Unexpected route color %s!", gRoute);
 		}
 	}
 
-	private static HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
+	private static final HashMap<Long, RouteTripSpec> ALL_ROUTE_TRIPS2;
 	static {
-		HashMap<Long, RouteTripSpec> map2 = new HashMap<Long, RouteTripSpec>();
+		HashMap<Long, RouteTripSpec> map2 = new HashMap<>();
 		ALL_ROUTE_TRIPS2 = map2;
 	}
 
@@ -273,6 +263,14 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				mTrip.setHeadsignString("Institutes", mTrip.getHeadsignId());
 				return true;
 			}
+		} else if (mTrip.getRouteId() == 2L) {
+			if (Arrays.asList( //
+					"Vlg", //
+					"Vlg Mall" //
+			).containsAll(headsignsValues)) {
+				mTrip.setHeadsignString("Vlg Mall", mTrip.getHeadsignId());
+				return true;
+			}
 		} else if (mTrip.getRouteId() == 3L) {
 			if (Arrays.asList( //
 					"Highland Dr / Kingsbridge / Vlg", //
@@ -298,9 +296,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 				return true;
 			}
 		}
-		System.out.printf("\nUnexpected trips to merge: %s & %s!\n", mTrip, mTripToMerge);
-		System.exit(-1);
-		return false;
+		throw new MTLog.Fatal("Unexpected trips to merge: %s & %s!", mTrip, mTripToMerge);
 	}
 
 	private static final Pattern CIVIC_ADDRESS_ENDS_WITH = Pattern.compile("((\\s)*(\\- opposite|\\- opp|opposite|\\-)(\\s)*$)", Pattern.CASE_INSENSITIVE);
@@ -348,8 +344,6 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		if (matcher.find()) {
 			return Integer.parseInt(matcher.group());
 		}
-		System.out.printf("\nUnexpected stop ID for %s!\n", gStop);
-		System.exit(-1);
-		return -1;
+		throw new MTLog.Fatal("Unexpected stop ID for %s!", gStop);
 	}
 }
