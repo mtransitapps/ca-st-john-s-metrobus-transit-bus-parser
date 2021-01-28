@@ -17,9 +17,7 @@ import org.mtransit.parser.mt.data.MAgency;
 import org.mtransit.parser.mt.data.MRoute;
 import org.mtransit.parser.mt.data.MTrip;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -195,6 +193,11 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		);
 	}
 
+	@Override
+	public boolean directionFinderEnabled() {
+		return true;
+	}
+
 	private static final Pattern _DASH_ = Pattern.compile("([\\s]*-[\\s]*)", Pattern.CASE_INSENSITIVE);
 	private static final String _DASH_REPLACEMENT = " - ";
 
@@ -215,48 +218,6 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	@Override
 	public boolean mergeHeadsign(@NotNull MTrip mTrip, @NotNull MTrip mTripToMerge) {
-		List<String> headsignsValues = Arrays.asList(mTrip.getHeadsignValue(), mTripToMerge.getHeadsignValue());
-		if (mTrip.getRouteId() == 1L) {
-			if (Arrays.asList( //
-					"MUN / CONA / MI", //
-					"Institutes" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Institutes", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 2L) {
-			if (Arrays.asList( //
-					"Vlg", //
-					"Vlg Mall" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Vlg Mall", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 3L) {
-			if (Arrays.asList( //
-					"Highland Dr / Kingsbridge / Vlg", //
-					"Vlg Mall" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Vlg Mall", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 11L) {
-			if (Arrays.asList( //
-					EMPTY, //
-					"Avalon Mall" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Avalon Mall", mTrip.getHeadsignId());
-				return true;
-			}
-		} else if (mTrip.getRouteId() == 27L) {
-			if (Arrays.asList( //
-					"Sheraton / Quidi Vidi / Delta", //
-					"Quidi Vidi / Delta" //
-			).containsAll(headsignsValues)) {
-				mTrip.setHeadsignString("Quidi Vidi / Delta", mTrip.getHeadsignId()); // Sheraton / Quidi Vidi / Delta
-				return true;
-			}
-		}
 		throw new MTLog.Fatal("Unexpected trips to merge: %s & %s!", mTrip, mTripToMerge);
 	}
 
