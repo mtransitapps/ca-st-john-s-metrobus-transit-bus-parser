@@ -18,9 +18,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// https://www.metrobus.com/html-default/gtfs.asp
 // https://www.metrobus.com/html-default/documents.asp
-// https://www.metrobus.com/google/google_transit.zip
+// https://www.metrobus.com/gtfs.asp
+// https://www.metrobustransit.ca/google/google_transit.zip
 public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
