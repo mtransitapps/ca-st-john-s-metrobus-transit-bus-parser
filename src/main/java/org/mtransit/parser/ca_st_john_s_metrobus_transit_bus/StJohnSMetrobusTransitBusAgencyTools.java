@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 
 // https://www.metrobus.com/html-default/documents.asp
 // https://www.metrobus.com/gtfs.asp
-// https://www.metrobustransit.ca/google/google_transit.zip
 public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 
 	public static void main(@NotNull String[] args) {
@@ -148,7 +147,7 @@ public class StJohnSMetrobusTransitBusAgencyTools extends DefaultAgencyTools {
 		return true;
 	}
 
-	private static final Pattern _DASH_ = Pattern.compile("([\\s]*-[\\s]*)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern _DASH_ = Pattern.compile("(\\s*-\\s*)", Pattern.CASE_INSENSITIVE);
 	private static final String _DASH_REPLACEMENT = " - ";
 
 	private static final Pattern STARTS_WITH_DASH_ = Pattern.compile("(^.*( - ))", Pattern.CASE_INSENSITIVE);
